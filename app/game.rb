@@ -12,10 +12,10 @@ class Game
   end
 
   def self.setup
-    return if $execution.game_setup_done
+    return if this.setup_done
 
     puts "performing game setup"
-    $execution.game_setup_done = true
+    this.setup_done = true
   end
 
   def self.this

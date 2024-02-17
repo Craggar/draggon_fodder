@@ -14,7 +14,7 @@ class Menu
   private
 
   def self.setup
-    return if $execution.menu_setup_done
+    return if this.setup_done
 
     puts "performing menu setup"
     create_buttons
@@ -26,7 +26,7 @@ class Menu
         key: :space
       }
     )
-    $execution.menu_setup_done = true
+    this.menu_setup_done = true
   end
 
   def self.create_buttons
