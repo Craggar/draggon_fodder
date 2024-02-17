@@ -4,6 +4,7 @@ module DriveHandlers
       include Attributes::Box
       include Behaviours::Click
     end
+
     class Hover < ::DriveHandlers::Base
       include Attributes::Box
       include Behaviours::Hover

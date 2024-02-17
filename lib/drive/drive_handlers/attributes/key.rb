@@ -27,8 +27,7 @@ module DriveHandlers
       end
 
       def pressed?(args)
-        key_pressed = args.inputs.keyboard.send(action).send(key)
-        key_pressed
+        args.inputs.keyboard.send(action).send(key)
       end
     end
   end

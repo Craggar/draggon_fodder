@@ -4,6 +4,7 @@ module DriveHandlers
       include Attributes::Circle
       include Behaviours::Click
     end
+
     class Hover < ::DriveHandlers::Base
       include Attributes::Circle
       include Behaviours::Hover

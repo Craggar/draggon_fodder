@@ -12,9 +12,11 @@ module DriveHandlers
       @enabled = true
     end
 
-    def init_from_hash(opts:); end
+    def init_from_hash(opts:)
+    end
 
-    def init_from_array(opts:); end
+    def init_from_array(opts:)
+    end
 
     def tick(args)
       trigger(args) if triggered?(args)

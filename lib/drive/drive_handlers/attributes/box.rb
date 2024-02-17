@@ -34,9 +34,7 @@ module DriveHandlers
       end
 
       def inside?(args)
-        inside = args.inputs.mouse.inside_rect?(mask)
-        # Drive.log "Checking if #{args.inputs.mouse.point} in #{mask} - #{inside}"
-        inside
+        args.inputs.mouse.inside_rect?(mask)
       end
 
       def mask
