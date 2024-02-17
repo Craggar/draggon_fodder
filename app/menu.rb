@@ -7,8 +7,8 @@ class Menu
   end
 
   def self.render
-    args.outputs.labels << args.state.menu.start_button.label
-    args.outputs.solids << args.state.menu.start_button.background
+    outputs.labels << this.start_button.label
+    outputs.solids << this.start_button.background
   end
 
   private
@@ -30,7 +30,7 @@ class Menu
   end
 
   def self.create_buttons
-    args.state.menu.start_button = args.state.new_entity(
+    this.start_button = state.new_entity(
       :button,
       x: 100,
       y: 100,
@@ -43,13 +43,13 @@ class Menu
       event: :hover,
       shape: :box,
       callback: method(:hover_callback),
-      opts: args.state.menu.start_button.background
+      opts: this.start_button.background
     )
     ::Drive.register_handler(
       event: :click,
       shape: :box,
       callback: method(:click_callback),
-      opts: args.state.menu.start_button.background
+      opts: this.start_button.background
     )
   end
 
@@ -62,5 +62,9 @@ class Menu
 
   def self.confirm_callback(opts = {})
     puts "confirming #{opts}"
+  end
+
+  def self.this
+    state.menu
   end
 end

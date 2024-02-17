@@ -17,4 +17,8 @@ class Game
     puts "performing game setup"
     $execution.game_setup_done = true
   end
+
+  def self.this
+    state.game
+  end
 end

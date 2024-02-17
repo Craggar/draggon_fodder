@@ -1,9 +1,21 @@
-class UsesState
-  def args
-    $execution.args
+module UsesState
+  class << self
+    def included(klass)
+      klass.extend ClassMethods
+    end
   end
 
-  def state
-    args.state
+  module ClassMethods
+    def args
+      $execution.args
+    end
+
+    def state
+      $execution.args.state
+    end
+
+    def outputs
+      $execution.args.outputs
+    end
   end
 end
