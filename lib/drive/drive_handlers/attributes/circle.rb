@@ -12,7 +12,7 @@ module DriveHandlers
           y: y,
           radius: radius,
           mask: mask,
-          callback: callback,
+          callback: callback
         }
       end
 
@@ -31,7 +31,7 @@ module DriveHandlers
       end
 
       def inside?(args)
-        inside = args.inputs.mouse.inside_circle?([mask.x, mask.y], mask[2]) 
+        inside = args.inputs.mouse.inside_circle?([mask.x, mask.y], mask[2])
         # Drive.log "Checking if #{args.inputs.mouse.point} in #{mask} - #{inside}"
         inside
       end

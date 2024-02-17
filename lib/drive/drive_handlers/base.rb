@@ -5,8 +5,8 @@ module DriveHandlers
 
     def initialize(callback:, opts:)
       Drive.log "EventHandler ##{$ids + 1} init"
-      init_from_hash(opts: opts) if opts.is_a?(Hash) 
-      init_from_array(opts: opts) if opts.is_a?(Array) 
+      init_from_hash(opts: opts) if opts.is_a?(Hash)
+      init_from_array(opts: opts) if opts.is_a?(Array)
       generate_id
       @callback = callback
       @enabled = true
@@ -36,7 +36,7 @@ module DriveHandlers
         id: id,
         enabled: enabled,
         last_ticked: last_ticked,
-        callback: callback,
+        callback: callback
       }
     end
 

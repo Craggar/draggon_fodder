@@ -10,7 +10,7 @@ module DriveHandlers
           last_ticked: last_ticked,
           action: action,
           key: key,
-          callback: callback,
+          callback: callback
         }
       end
 

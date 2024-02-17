@@ -13,7 +13,7 @@ module DriveHandlers
           w: w,
           h: h,
           mask: mask,
-          callback: callback,
+          callback: callback
         }
       end
 
