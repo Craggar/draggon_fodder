@@ -5,8 +5,8 @@ class Main
     :initial_setup_done, :menu_setup_done, :game_setup_done
 
   SCENE_CLASSES = {
-    menu: Menu,
-    game: Game
+    menu: ::Scene::Menu,
+    game: ::Scene::Game
   }
 
   def tick
