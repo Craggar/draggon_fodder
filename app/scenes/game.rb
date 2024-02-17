@@ -6,8 +6,6 @@ module Scene
       render
     end
 
-    private
-
     def self.render
     end
 

@@ -11,8 +11,6 @@ module Scene
       outputs.solids << this.start_button.background
     end
 
-    private
-
     def self.setup_scene
       return if this.setup_done
       puts "performing game setup"

@@ -61,8 +61,6 @@ class Drive
     puts message
   end
 
-  private
-
   def self.hover_tick(args)
     return unless hover_events.count.positive?
 
