@@ -1,8 +1,8 @@
 class Game
   include UsesState
+  include Scenic
 
   def self.tick
-    setup
     render
   end
 
@@ -11,7 +11,7 @@ class Game
   def self.render
   end
 
-  def self.setup
+  def self.setup_scene
     return if this.setup_done
 
     puts "performing game setup"
@@ -20,5 +20,19 @@ class Game
 
   def self.this
     state.game
+  end
+
+  def self.leave_scene
+    super
+  end
+
+  def self.enter_scene
+    super
+  end
+
+  def self.leave_scene
+  end
+
+  def self.enter_scene
   end
 end

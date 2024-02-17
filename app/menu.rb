@@ -1,8 +1,8 @@
 class Menu
   include UsesState
+  include Scenic
 
   def self.tick
-    setup
     render
   end
 
@@ -13,18 +13,22 @@ class Menu
 
   private
 
-  def self.setup
+  def self.setup_scene
     return if this.setup_done
 
     puts "performing menu setup"
+    this.registered_handlers ||= []
+
     create_buttons
-    ::Drive.register_handler(
-      event: :key,
-      callback: method(:confirm_callback),
+    ::Drive.register_handlers(
+      callbacks: {
+        key: method(:confirm_callback)
+      },
       opts: {
         action: :key_down,
         key: :space
-      }
+      },
+      store: this.registered_handlers
     )
     this.menu_setup_done = true
   end
@@ -39,25 +43,24 @@ class Menu
       label:  [100, 125, "Start", -2, 0, 0, 0, 0].label,
       background: [100, 100, 100, 50, 255, 255, 255].solid
     )
-    ::Drive.register_handler(
-      event: :hover,
+    ::Drive.register_handlers(
       shape: :box,
-      callback: method(:hover_callback),
-      opts: this.start_button.background
-    )
-    ::Drive.register_handler(
-      event: :click,
-      shape: :box,
-      callback: method(:click_callback),
-      opts: this.start_button.background
+      callbacks: {
+        hover: method(:hover_callback),
+        click: method(:click_callback)
+      },
+      opts: this.start_button.background,
+      store: this.registered_handlers
     )
   end
 
   def self.hover_callback(opts = {})
+    puts "hovering #{opts}"
   end
 
   def self.click_callback(opts = {})
-    $execution.start_game
+    puts "clicking #{opts}"
+    $execution.swap_scene(:game)
   end
 
   def self.confirm_callback(opts = {})
@@ -66,5 +69,15 @@ class Menu
 
   def self.this
     state.menu
+  end
+
+  def self.leave_scene
+    puts "leaving menu - deregistering handlers '#{this.registered_handlers}'"
+    this.registered_handlers.each do |id|
+      ::Drive.deregister_handler(id)
+    end
+  end
+
+  def self.enter_scene
   end
 end

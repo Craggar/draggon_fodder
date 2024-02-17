@@ -4,28 +4,33 @@ class Main
   attr_accessor :args, :scene,
     :initial_setup_done, :menu_setup_done, :game_setup_done
 
+  SCENE_CLASSES = {
+    menu: Menu,
+    game: Game
+  }
+
   def tick
     setup
     ::Drive.tick(args)
-    if scene == :game
-      Game.tick
-    elsif scene == :menu
-      Menu.tick
-    end
+    SCENE_CLASSES[scene]&.tick
   end
 
   def setup
     return if initial_setup_done
 
     puts "performing setup"
-    self.scene = :menu
     ::Drive.enable_logging
 
+    swap_scene(:menu)
     self.initial_setup_done = true
   end
 
-  def start_game
-    self.scene = :game
+  def swap_scene(next_scene)
+    puts "exiting #{scene} and entering #{next_scene}"
+    SCENE_CLASSES[scene]&.leave_scene
+    self.scene = next_scene
+    SCENE_CLASSES[scene]&.setup_scene
+    SCENE_CLASSES[scene]&.enter_scene
   end
 end
 

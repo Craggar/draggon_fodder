@@ -1,18 +1,21 @@
 class Drive
-  def self.register_handler(event:, callback:, shape: nil, opts: {})
-    Drive.log "Registering Handler for #{event}, #{shape}, #{opts}, #{callback}"
-    handler = ::DriveHandlers.for(
-      event: event,
-      shape: shape,
-      callback: callback,
-      opts: opts
-    )
-    store_handler(event, handler)
-    handler
+  def self.register_handlers(callbacks:, store: nil, shape: nil, opts: {})
+    Drive.log "Registering Handler for #{shape}, #{opts}, #{callbacks}"
+    callbacks.map do |event, callback|
+      handler = ::DriveHandlers.for(
+        event: event,
+        shape: shape,
+        callback: callback,
+        opts: opts
+      )
+      store_handler(event, handler)
+      store << handler.id if store
+    end
   end
 
   def self.deregister_handler(id)
     if hover_events.key?(id)
+      Drive.log "Deregestering hover handler #{id}"
       storage[:hover_events].tap do |events|
         events.delete(id)
       end
@@ -22,6 +25,7 @@ class Drive
         events.delete(id)
       end
     elsif evt = key_event_from_id(id)
+      Drive.log "Deregestering key handler #{id}"
       storage[:key_events].tap do |events|
         events[evt.key].delete(evt.action)
       end
