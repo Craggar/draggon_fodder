@@ -24,7 +24,7 @@ class Drive
       storage[:click_events].tap do |events|
         events.delete(id)
       end
-    elsif evt = key_event_from_id(id)
+    elsif (evt = key_event_from_id(id))
       Drive.log "Deregestering key handler #{id}"
       storage[:key_events].tap do |events|
         events[evt.key].delete(evt.action)
@@ -33,11 +33,11 @@ class Drive
   end
 
   def self.toggle_handler(id, state: :toggle)
-    if event = hover_events[id]
+    if (event = hover_events[id])
       event.toggle(state)
-    elsif event = click_events[id]
+    elsif (event = click_events[id])
       event.toggle(state)
-    elsif event = key_events[id]
+    elsif (event = key_events[id])
       event.toggle(state)
     end
   end

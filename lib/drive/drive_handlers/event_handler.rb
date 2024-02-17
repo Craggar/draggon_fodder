@@ -21,7 +21,7 @@ module DriveHandlers
 
   def self.for(event:, shape:, callback:, opts:)
     Drive.log "#{event}/#{shape}"
-    return unless event_options = HANDLERS[event]
+    return unless (event_options = HANDLERS[event])
 
     if event == :key
       return HANDLERS[:key][:event].new(
