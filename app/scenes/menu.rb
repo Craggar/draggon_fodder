@@ -31,13 +31,13 @@ module Scene
     end
 
     def self.create_buttons
-      this.start_button = state.new_entity(
+      this.start_button = state.new_entity_strict(
         :button,
         x: 100,
         y: 100,
         w: 100,
         h: 50,
-        label:  [100, 125, "Start", -2, 0, 0, 0, 0].label,
+        label: [100, 125, "Start", -2, 0, 0, 0, 0].label,
         background: [100, 100, 100, 50, 255, 255, 255].solid
       )
       ::Drive.register_handlers(
