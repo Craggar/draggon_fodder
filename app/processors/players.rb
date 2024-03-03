@@ -38,8 +38,8 @@ module Processor
     def self.process_inputs
       ::Processor::Players.this.active_players.each do |player|
         player.move_to_y += player.speed if args.inputs.keyboard.key_held.up || args.inputs.keyboard.key_held.w
-        player.move_to_y -= player.speed if args.inputs.keyboard.key_held.down || args.inputs.keyboard.key_held.a
-        player.move_to_x -= player.speed if args.inputs.keyboard.key_held.left || args.inputs.keyboard.key_held.s
+        player.move_to_y -= player.speed if args.inputs.keyboard.key_held.down || args.inputs.keyboard.key_held.s
+        player.move_to_x -= player.speed if args.inputs.keyboard.key_held.left || args.inputs.keyboard.key_held.a
         player.move_to_x += player.speed if args.inputs.keyboard.key_held.right || args.inputs.keyboard.key_held.d
       end
     end

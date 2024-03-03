@@ -3,10 +3,8 @@ module Camera
     include UsesState
 
     def self.render
-      outputs.solids << [this.viewport.x, this.viewport.y, this.viewport.w, this.viewport.h, 192, 192, 192].solid
-      if this.target
-        outputs.solids << [this.follow_zone.x, this.follow_zone.y, this.follow_zone.w, this.follow_zone.h, 255, 0, 0].solid
-      end
+      args.render_target(:world).solids << [this.viewport.x, this.viewport.y, this.viewport.w, this.viewport.h, 192, 192, 192].solid
+
       outputs.sprites << {
         x: 0,
         y: 0,
