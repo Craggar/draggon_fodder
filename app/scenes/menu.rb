@@ -59,6 +59,7 @@ module Scene
     end
 
     def self.confirm_callback(opts = {})
+      $execution.swap_scene(:game)
     end
 
     def self.this

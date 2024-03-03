@@ -9,6 +9,9 @@ module Scene
     end
 
     def self.render
+      world_render_target = args.render_target(:world)
+      world_render_target.width = world.dimensions.w
+      world_render_target.height = world.dimensions.h
       args.render_target(:world).sprites << ::Processor::Players.this.active_players
 
       args.render_target(:world).labels << ::Processor::Players.this.active_players.map do |p|
@@ -36,15 +39,19 @@ module Scene
       this.camera_class.follow(::Processor::Players.this.active_players.first)
 
       p = ::Processor::Players.this.active_players.first
-      # p.queued_moves << [400, 750]
-      # p.queued_moves << [1500, 1100]
-      # p.queued_moves << [600, 200]
+      p.queued_moves << [400, 750]
+      p.queued_moves << [1500, 1100]
+      p.queued_moves << [600, 200]
 
       this.setup_done = true
     end
 
     def self.this
       state.game
+    end
+
+    def self.world
+      state.game.world
     end
   end
 end

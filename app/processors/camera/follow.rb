@@ -3,7 +3,7 @@ module Camera
     include UsesState
 
     def self.render
-      args.render_target(:world).solids << [this.viewport.x, this.viewport.y, this.viewport.w, this.viewport.h, 192, 192, 192].solid
+      # args.render_target(:world).solids << [this.viewport.x, this.viewport.y, this.viewport.w, this.viewport.h, 192, 192, 192].solid
 
       outputs.sprites << {
         x: 0,
@@ -17,7 +17,10 @@ module Camera
         path: :world
       }
 
-      outputs.labels << [20, 680, "Camera: #{this.viewport.x},#{this.viewport.y}", 0, 255, 0, 0, 0].label
+      outputs.labels << [20, 680, "Camera: #{this.viewport.x.to_i},#{this.viewport.y.to_i} [#{this.viewport.w.to_i}x#{this.viewport.h.to_i}]", 0, 255, 0, 0, 0].label
+
+      world_render_target = args.render_target(:world)
+      outputs.labels << [20, 700, "World: #{world_render_target.width.to_i},#{world_render_target.height.to_i}", 0, 255, 0, 0, 0].label
     end
 
     def self.tick
@@ -43,7 +46,7 @@ module Camera
 
     def self.follow(target)
       this.target = target
-      this.speed = 2
+      this.speed = 2.1
     end
 
     def self.setup(opts = {})
