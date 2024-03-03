@@ -13,7 +13,7 @@ module Scene
 
     def self.setup_scene
       return if this.setup_done
-      puts "performing game setup"
+      puts "performing menu setup"
       super
 
       create_buttons
@@ -52,16 +52,13 @@ module Scene
     end
 
     def self.hover_callback(opts = {})
-      puts "hovering #{opts}"
     end
 
     def self.click_callback(opts = {})
-      puts "clicking #{opts}"
       $execution.swap_scene(:game)
     end
 
     def self.confirm_callback(opts = {})
-      puts "confirming #{opts}"
     end
 
     def self.this

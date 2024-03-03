@@ -27,7 +27,6 @@ module Camera
 
       update_follow_zone
       return if this.target.inside_rect?(this.follow_zone)
-      puts this.speed
 
       this.viewport.x -= this.speed if this.target.x < this.follow_zone.x
       this.viewport.x += this.speed if this.target.x > this.follow_zone.x + this.follow_zone.w

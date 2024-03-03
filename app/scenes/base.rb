@@ -5,7 +5,6 @@ module Scene
     end
 
     def self.leave_scene
-      puts "leaving menu - deregistering handlers '#{this.registered_handlers}'"
       this.registered_handlers.each do |id|
         ::Drive.deregister_handler(id)
       end

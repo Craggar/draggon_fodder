@@ -7,19 +7,15 @@ module Scene
       p = ::Processor::Players.this.active_players.first
       if args.inputs.keyboard.key_held.d
         p.x += 4
-        puts "moving right"
       end
       if args.inputs.keyboard.key_held.a
         p.x -= 4
-        puts "moving left"
       end
       if args.inputs.keyboard.key_held.w
         p.y += 4
-        puts "moving up"
       end
       if args.inputs.keyboard.key_held.s
         p.y -= 4
-        puts "moving down"
       end
       render
     end
