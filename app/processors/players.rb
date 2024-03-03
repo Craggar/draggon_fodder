@@ -13,34 +13,39 @@ module Processor
     end
 
     def self.move_player(player)
-      return if player.move_to_x == player.x && player.move_to_y == player.y
-
-      if player.x < player.move_to_x
-        player.x += player.speed
-      elsif player.x > player.move_to_x
-        player.x -= player.speed
-      end
-      if player.y < player.move_to_y
-        player.y += player.speed
-      elsif player.y > player.move_to_y
-        player.y -= player.speed
-      end
+      return if player.move_to_x == player.x && player.move_to_y == player.y && player.queued_moves.empty?
 
       player.x = player.move_to_x if (player.x - player.move_to_x).abs < player.speed
       player.y = player.move_to_y if (player.y - player.move_to_y).abs < player.speed
 
-      player.x = 0 if player.x < 0
-      player.y = 0 if player.y < 0
-      player.x = (world.dimensions.w - player.w) if player.x > (world.dimensions.w - player.w)
-      player.y = (world.dimensions.h - player.h) if player.y > (world.dimensions.h - player.h)
+      player.x = (player.x + player.speed).clamp(0, world.dimensions.w - player.w) if player.x < player.move_to_x
+      player.x = (player.x - player.speed).clamp(0, world.dimensions.w - player.w) if player.x > player.move_to_x
+      player.y = (player.y + player.speed).clamp(0, world.dimensions.h - player.h) if player.y < player.move_to_y
+      player.y = (player.y - player.speed).clamp(0, world.dimensions.h - player.h) if player.y > player.move_to_y
+
+      if player.x == player.move_to_x && player.y == player.move_to_y
+        if player.queued_moves.any?
+          next_move = player.queued_moves.shift
+          player.move_to_x = next_move.x
+          player.move_to_y = next_move.y
+        end
+      end
     end
 
     def self.process_inputs
+      movement = [0, 0]
+      movement.y += 1 if args.inputs.keyboard.key_held.up || args.inputs.keyboard.key_held.w
+      movement.y -= 1 if args.inputs.keyboard.key_held.down || args.inputs.keyboard.key_held.s
+      movement.x += 1 if args.inputs.keyboard.key_held.right || args.inputs.keyboard.key_held.d
+      movement.x -= 1 if args.inputs.keyboard.key_held.left || args.inputs.keyboard.key_held.a
+
+      return if movement.x.zero? && movement.y.zero?
+
       ::Processor::Players.this.active_players.each do |player|
-        player.move_to_y += player.speed if args.inputs.keyboard.key_held.up || args.inputs.keyboard.key_held.w
-        player.move_to_y -= player.speed if args.inputs.keyboard.key_held.down || args.inputs.keyboard.key_held.s
-        player.move_to_x -= player.speed if args.inputs.keyboard.key_held.left || args.inputs.keyboard.key_held.a
-        player.move_to_x += player.speed if args.inputs.keyboard.key_held.right || args.inputs.keyboard.key_held.d
+        next_move = [player.x, player.y]
+        next_move.x = (next_move.x + (movement.x * player.speed)).clamp(0, world.dimensions.w - player.w)
+        next_move.y = (next_move.y + (movement.y * player.speed)).clamp(0, world.dimensions.h - player.h)
+        player.queued_moves = [next_move]
       end
     end
 
@@ -99,6 +104,7 @@ module Processor
           y: 300,
           move_to_x: 300,
           move_to_y: 300,
+          queued_moves: [],
           speed: PLAYER_SPEED,
           w: PLAYER_WIDTH,
           h: PLAYER_HEIGHT,

@@ -35,6 +35,11 @@ module Scene
 
       this.camera_class.follow(::Processor::Players.this.active_players.first)
 
+      p = ::Processor::Players.this.active_players.first
+      # p.queued_moves << [400, 750]
+      # p.queued_moves << [1500, 1100]
+      # p.queued_moves << [600, 200]
+
       this.setup_done = true
     end
 

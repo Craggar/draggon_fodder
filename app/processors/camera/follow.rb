@@ -26,14 +26,10 @@ module Camera
       update_follow_zone
       return if this.target.inside_rect?(this.follow_zone)
 
-      this.viewport.x -= this.speed if this.target.x < this.follow_zone.x
-      this.viewport.x += this.speed if this.target.x > this.follow_zone.x + this.follow_zone.w
-      this.viewport.y -= this.speed if this.target.y < this.follow_zone.y
-      this.viewport.y += this.speed if this.target.y > this.follow_zone.y + this.follow_zone.h
-      this.viewport.x = 0 if this.viewport.x < 0
-      this.viewport.y = 0 if this.viewport.y < 0
-      this.viewport.x = world.dimensions.w - this.viewport.w if this.viewport.x > world.dimensions.w - this.viewport.w
-      this.viewport.y = world.dimensions.h - this.viewport.h if this.viewport.y > world.dimensions.h - this.viewport.h
+      this.viewport.x = (this.viewport.x + this.speed).clamp(0, world.dimensions.w - this.viewport.w) if this.target.x > this.follow_zone.x + this.follow_zone.w
+      this.viewport.x = (this.viewport.x - this.speed).clamp(0, world.dimensions.w - this.viewport.w) if this.target.x < this.follow_zone.x
+      this.viewport.y = (this.viewport.y + this.speed).clamp(0, world.dimensions.h - this.viewport.h) if this.target.y > this.follow_zone.y + this.follow_zone.h
+      this.viewport.y = (this.viewport.y - this.speed).clamp(0, world.dimensions.h - this.viewport.h) if this.target.y < this.follow_zone.y
     end
 
     def self.update_follow_zone
