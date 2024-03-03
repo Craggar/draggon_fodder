@@ -21,6 +21,12 @@ class Main
     puts "performing setup"
     ::Drive.enable_logging
 
+    args.state.video_config = args.state.new_entity_strict(
+      :video_config,
+      w: 1280,
+      h: 720
+    )
+
     swap_scene(:menu)
     self.initial_setup_done = true
   end

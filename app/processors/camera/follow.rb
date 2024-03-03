@@ -10,8 +10,8 @@ module Camera
       outputs.sprites << {
         x: 0,
         y: 0,
-        w: 1280,
-        h: 720,
+        w: state.video_config.w,
+        h: state.video_config.h,
         source_x: this.viewport.x,
         source_y: this.viewport.y,
         source_w: this.viewport.w,
@@ -58,8 +58,8 @@ module Camera
         :viewport,
         x: opts[:x] || 0,
         y: opts[:y] || 0,
-        w: opts[:w] || 1280,
-        h: opts[:h] || 720
+        w: opts[:w] || state.video_config.w,
+        h: opts[:h] || state.video_config.h
       )
     end
 
