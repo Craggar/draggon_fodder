@@ -3,8 +3,77 @@ module Processor
     include UsesState
     PLAYER_WIDTH = 10
     PLAYER_HEIGHT = 10
+    PLAYER_SPEED = 2
 
-    def self.tick(args)
+    def self.tick
+      process_inputs
+      ::Processor::Players.this.active_players.each do |player|
+        move_player(player)
+      end
+    end
+
+    def self.move_player(player)
+      return if player.move_to_x == player.x && player.move_to_y == player.y
+
+      if player.x < player.move_to_x
+        player.x += player.speed
+      elsif player.x > player.move_to_x
+        player.x -= player.speed
+      end
+      if player.y < player.move_to_y
+        player.y += player.speed
+      elsif player.y > player.move_to_y
+        player.y -= player.speed
+      end
+
+      player.x = player.move_to_x if (player.x - player.move_to_x).abs < player.speed
+      player.y = player.move_to_y if (player.y - player.move_to_y).abs < player.speed
+
+      player.x = 0 if player.x < 0
+      player.y = 0 if player.y < 0
+      player.x = (world.dimensions.w - player.w) if player.x > (world.dimensions.w - player.w)
+      player.y = (world.dimensions.h - player.h) if player.y > (world.dimensions.h - player.h)
+    end
+
+    def self.process_inputs
+      ::Processor::Players.this.active_players.each do |player|
+        player.move_to_y += player.speed if args.inputs.keyboard.key_held.up || args.inputs.keyboard.key_held.w
+        player.move_to_y -= player.speed if args.inputs.keyboard.key_held.down || args.inputs.keyboard.key_held.a
+        player.move_to_x -= player.speed if args.inputs.keyboard.key_held.left || args.inputs.keyboard.key_held.s
+        player.move_to_x += player.speed if args.inputs.keyboard.key_held.right || args.inputs.keyboard.key_held.d
+      end
+    end
+
+    def self.active_player_count
+      this.active_player_count
+    end
+
+    def self.active_player_count=(val)
+      this.active_player_count = val
+    end
+
+    def self.active_players
+      this.active_players
+    end
+
+    def self.active_players=(val)
+      this.active_players = val
+    end
+
+    def self.roster
+      this.roster
+    end
+
+    def self.roster=(val)
+      this.roster = val
+    end
+
+    def self.active_players
+      this.active_players
+    end
+
+    def self.active_players=(val)
+      this.active_players = val
     end
 
     def self.setup(level:)
@@ -28,6 +97,9 @@ module Processor
           :player,
           x: 300,
           y: 300,
+          move_to_x: 300,
+          move_to_y: 300,
+          speed: PLAYER_SPEED,
           w: PLAYER_WIDTH,
           h: PLAYER_HEIGHT,
           text: player_name,
@@ -52,6 +124,9 @@ module Processor
         player.x += 20 if index == 2 || index == 4
         player.y += 20 if index == 1 || index == 2
         player.y -= 20 if index == 3 || index == 4
+
+        player.move_to_x = player.x
+        player.move_to_y = player.y
       end
     end
 
@@ -61,6 +136,10 @@ module Processor
 
     def self.this
       state.game.players
+    end
+
+    def self.world
+      state.game.world
     end
 
     ROSTER_NAMES = %w[

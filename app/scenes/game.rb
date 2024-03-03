@@ -4,19 +4,7 @@ module Scene
 
     def self.tick
       this.camera_class.tick
-      p = ::Processor::Players.this.active_players.first
-      if args.inputs.keyboard.key_held.d
-        p.x += 4
-      end
-      if args.inputs.keyboard.key_held.a
-        p.x -= 4
-      end
-      if args.inputs.keyboard.key_held.w
-        p.y += 4
-      end
-      if args.inputs.keyboard.key_held.s
-        p.y -= 4
-      end
+      ::Processor::Players.tick
       render
     end
 
