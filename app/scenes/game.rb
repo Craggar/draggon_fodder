@@ -25,10 +25,11 @@ module Scene
     end
 
     def self.render
-      outputs.sprites << ::Processor::Players.this.active_players
+      args.render_target(:world).sprites << ::Processor::Players.this.active_players
 
-      p = ::Processor::Players.this.active_players.first
-      outputs.labels << [p.x, p.y, p.text, 0, 255, 0, 0, 0].label
+      args.render_target(:world).labels << ::Processor::Players.this.active_players.map do |p|
+        [p.x, p.y, p.text, 0, 255, 0, 0, 0].label
+      end
 
       this.camera_class.render
     end

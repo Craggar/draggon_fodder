@@ -7,6 +7,18 @@ module Camera
       if this.target
         outputs.solids << [this.follow_zone.x, this.follow_zone.y, this.follow_zone.w, this.follow_zone.h, 255, 0, 0].solid
       end
+      outputs.sprites << {
+        x: 0,
+        y: 0,
+        w: 1280,
+        h: 720,
+        source_x: this.viewport.x,
+        source_y: this.viewport.y,
+        source_w: this.viewport.w,
+        source_h: this.viewport.h,
+        path: :world
+      }
+
       outputs.labels << [20, 680, "Camera: #{this.viewport.x},#{this.viewport.y}", 0, 255, 0, 0, 0].label
     end
 
