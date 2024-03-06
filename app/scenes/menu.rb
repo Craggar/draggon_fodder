@@ -37,8 +37,8 @@ module Scene
         y: 100,
         w: 100,
         h: 50,
-        label: [100, 125, "Start", -2, 0, 0, 0, 0].label,
-        background: [100, 100, 100, 50, 255, 255, 255].solid
+        label: {x: 100, y: 125, text: "Start", size_enum: -2, alignment_enum: 0, r: 0, g: 0, b: 0}.label,
+        background: {x: 100, y: 100, w: 100, h: 50, r: 255, g: 255, b: 255}.solid
       )
       ::Drive.register_handlers(
         shape: :box,

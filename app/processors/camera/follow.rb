@@ -3,7 +3,7 @@ module Camera
     include UsesState
 
     def self.render
-      # args.render_target(:world).solids << [this.viewport.x, this.viewport.y, this.viewport.w, this.viewport.h, 192, 192, 192].solid
+      # args.render_target(:world).solids << {x: this.viewport.x, y: this.viewport.y, w: this.viewport.w, h: this.viewport.h, r: 192, g: 192, b: 192].solid
 
       outputs.sprites << {
         x: 0,
@@ -17,10 +17,10 @@ module Camera
         path: :world
       }
 
-      outputs.labels << [20, 680, "Camera: #{this.viewport.x.to_i},#{this.viewport.y.to_i} [#{this.viewport.w.to_i}x#{this.viewport.h.to_i}]", 0, 255, 0, 0, 0].label
+      outputs.labels << {x: 20, y: 680, text: "Camera: #{this.viewport.x.to_i},#{this.viewport.y.to_i} [#{this.viewport.w.to_i}x#{this.viewport.h.to_i}]", size_enum: 0, alignment_enum: 1, r: 255, g: 0, b: 0, a: 0}.label
 
       world_render_target = args.render_target(:world)
-      outputs.labels << [20, 700, "World: #{world_render_target.width.to_i},#{world_render_target.height.to_i}", 0, 255, 0, 0, 0].label
+      outputs.labels << {x: 20, y: 700, text: "World: #{world_render_target.width.to_i},#{world_render_target.height.to_i}", size_enum: 0, alignment_enum: 1, r: 255, g: 0, b: 0, a: 0}.label
     end
 
     def self.tick

@@ -15,7 +15,7 @@ module Scene
       args.render_target(:world).sprites << ::Processor::Players.this.active_players
 
       args.render_target(:world).labels << ::Processor::Players.this.active_players.map do |p|
-        [p.x, p.y, p.text, 0, 255, 0, 0, 0].label
+        {x: p.x, y: p.y, text: p.text, size_enum: 0, alignment_enum: 1, r: 255, g: 0, b: 0, a: 0}.label
       end
 
       this.camera_class.render
@@ -39,9 +39,9 @@ module Scene
       this.camera_class.follow(::Processor::Players.this.active_players.first)
 
       p = ::Processor::Players.this.active_players.first
-      p.queued_moves << [400, 750]
-      p.queued_moves << [1500, 1100]
-      p.queued_moves << [600, 200]
+      # p.queued_moves << [400, 750]
+      # p.queued_moves << [1500, 1100]
+      # p.queued_moves << [600, 200]
 
       this.setup_done = true
     end

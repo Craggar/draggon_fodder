@@ -41,11 +41,16 @@ module Processor
 
       return if movement.x.zero? && movement.y.zero?
 
+      leader = ::Processor::Players.this.active_players.first
+      next_move = [leader.x, leader.y]
+      next_move.x = (next_move.x + (movement.x * leader.speed)).clamp(0, world.dimensions.w - leader.w)
+      next_move.y = (next_move.y + (movement.y * leader.speed)).clamp(0, world.dimensions.h - leader.h)
+      leader.queued_moves = [next_move]
+
       ::Processor::Players.this.active_players.each do |player|
-        next_move = [player.x, player.y]
-        next_move.x = (next_move.x + (movement.x * player.speed)).clamp(0, world.dimensions.w - player.w)
-        next_move.y = (next_move.y + (movement.y * player.speed)).clamp(0, world.dimensions.h - player.h)
-        player.queued_moves = [next_move]
+        next if player == leader
+
+
       end
     end
 
