@@ -32,6 +32,8 @@ module Processor
       end
     end
 
+    DEGREES_TO_RADIANS = Math::PI / 180
+
     def self.process_inputs
       movement = [0, 0]
       movement.y += 1 if args.inputs.keyboard.key_held.up || args.inputs.keyboard.key_held.w
@@ -43,8 +45,17 @@ module Processor
 
       leader = ::Processor::Players.this.active_players.first
       next_move = [leader.x, leader.y]
-      next_move.x = (next_move.x + (movement.x * leader.speed)).clamp(0, world.dimensions.w - leader.w)
-      next_move.y = (next_move.y + (movement.y * leader.speed)).clamp(0, world.dimensions.h - leader.h)
+      velocities = if movement.x.zero?
+        [0, movement.y]
+      elsif movement.y.zero?
+        [movement.x, 0]
+      else
+        horizontal_component = leader.speed * Math.cos(45 * DEGREES_TO_RADIANS) * movement.x
+        vertical_component = leader.speed * Math.sin(45 * DEGREES_TO_RADIANS) * movement.y
+        [horizontal_component, vertical_component]
+      end
+      next_move.x = (next_move.x + (velocities.x * leader.speed)).clamp(0, world.dimensions.w - leader.w)
+      next_move.y = (next_move.y + (velocities.y * leader.speed)).clamp(0, world.dimensions.h - leader.h)
       leader.queued_moves = [next_move]
 
       ::Processor::Players.this.active_players.each do |player|
