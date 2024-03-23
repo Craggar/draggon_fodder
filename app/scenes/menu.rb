@@ -8,7 +8,9 @@ module Scene
 
     def self.render
       outputs.labels << this.start_button.label
+      outputs.labels << this.map_edit_button.label
       outputs.solids << this.start_button.background
+      outputs.solids << this.map_edit_button.background
     end
 
     def self.setup_scene
@@ -44,9 +46,26 @@ module Scene
         shape: :box,
         callbacks: {
           hover: method(:hover_callback),
-          click: method(:click_callback)
+          click: method(:start_click_callback)
         },
         opts: this.start_button.background,
+        store: this.registered_handlers
+      )
+      this.map_edit_button = state.new_entity_strict(
+        :button,
+        x: 100,
+        y: 200,
+        w: 100,
+        h: 50,
+        label: {x: 100, y: 225, text: "Map Edit", size_enum: -2, alignment_enum: 0, r: 0, g: 0, b: 0}.label,
+        background: {x: 100, y: 200, w: 100, h: 50, r: 255, g: 255, b: 255}.solid
+      )
+      ::Drive.register_handlers(
+        shape: :box,
+        callbacks: {
+          click: method(:map_edit_click_callback)
+        },
+        opts: this.map_edit_button.background,
         store: this.registered_handlers
       )
     end
@@ -54,8 +73,12 @@ module Scene
     def self.hover_callback(opts = {})
     end
 
-    def self.click_callback(opts = {})
+    def self.start_click_callback(opts = {})
       $execution.swap_scene(:game)
+    end
+
+    def self.map_edit_click_callback(opts = {})
+      $execution.swap_scene(:map_edit)
     end
 
     def self.confirm_callback(opts = {})

@@ -6,7 +6,8 @@ class Main
 
   SCENE_CLASSES = {
     menu: ::Scene::Menu,
-    game: ::Scene::Game
+    game: ::Scene::Game,
+    map_edit: ::Scene::MapEdit
   }
 
   def tick
