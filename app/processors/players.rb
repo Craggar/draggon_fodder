@@ -3,12 +3,11 @@ module Processor
     include UsesState
     PLAYER_WIDTH = 10
     PLAYER_HEIGHT = 10
-    PLAYER_SPEED = 4
+    PLAYER_SPEED = 2
 
     def self.tick
       process_inputs
-      update_other_player_moves if leader_moving?
-      ::Processor::Players.this.active_players.each do |player|
+      this.active_players.each do |player|
         move_player(player)
       end
     end
@@ -17,7 +16,7 @@ module Processor
       return if player.move_to_x == player.x && player.move_to_y == player.y && player.queued_moves.empty?
 
       # Project the next move
-      # Check collisions against buddies
+      # Check collisions against buddies/nearby landscape
 
       angle = args.geometry.angle_to(player, [player.move_to_x, player.move_to_y])
       horizontal_component = Math.cos(angle * DEGREES_TO_RADIANS)
@@ -26,8 +25,8 @@ module Processor
       player.x = player.move_to_x if (player.x - player.move_to_x).abs < PLAYER_SPEED
       player.y = player.move_to_y if (player.y - player.move_to_y).abs < PLAYER_SPEED
 
-      player.x = (player.x + horizontal_component).clamp(0, world.dimensions.w - player.w) if player.x != player.move_to_x
-      player.y = (player.y + vertical_component).clamp(0, world.dimensions.h - player.h) if player.y != player.move_to_y
+      player.x = (player.x + (horizontal_component * PLAYER_SPEED)).clamp(0, world.dimensions.w - player.w) if player.x != player.move_to_x
+      player.y = (player.y + (vertical_component * PLAYER_SPEED)).clamp(0, world.dimensions.h - player.h) if player.y != player.move_to_y
 
       if player.x == player.move_to_x && player.y == player.move_to_y
         if player.queued_moves.any?
@@ -49,49 +48,35 @@ module Processor
       return unless args.inputs.mouse.click
 
       next_move = [
-        args.inputs.mouse.click.point.x,
-        args.inputs.mouse.click.point.y
+        camera.viewport.x + args.inputs.mouse.click.point.x,
+        camera.viewport.y + args.inputs.mouse.click.point.y
       ]
-      leader.queued_moves = [next_move]
-      leader.move_to_x = leader.x
-      leader.move_to_y = leader.y
+      all_moves = this.active_players.map do |player|
+        [player.x, player.y]
+      end
+      all_moves.unshift(next_move)
+      all_moves.reverse!
+      puts "all moves: #{all_moves}"
+      this.active_players.each_with_index do |player, index|
+        player.queued_moves = all_moves[-(index + 1)..]
+        player.move_to_x = player.x
+        player.move_to_y = player.y
+      end
     end
 
     def self.process_keyboard_inputs
       movement = [0, 0]
-      movement.y += 1 if args.inputs.keyboard.key_held.up || args.inputs.keyboard.key_held.w
-      movement.y -= 1 if args.inputs.keyboard.key_held.down || args.inputs.keyboard.key_held.s
-      movement.x += 1 if args.inputs.keyboard.key_held.right || args.inputs.keyboard.key_held.d
-      movement.x -= 1 if args.inputs.keyboard.key_held.left || args.inputs.keyboard.key_held.a
+      movement.y += (PLAYER_SPEED * 2) if args.inputs.keyboard.key_held.up || args.inputs.keyboard.key_held.w
+      movement.y -= (PLAYER_SPEED * 2) if args.inputs.keyboard.key_held.down || args.inputs.keyboard.key_held.s
+      movement.x += (PLAYER_SPEED * 2) if args.inputs.keyboard.key_held.right || args.inputs.keyboard.key_held.d
+      movement.x -= (PLAYER_SPEED * 2) if args.inputs.keyboard.key_held.left || args.inputs.keyboard.key_held.a
 
       return if movement.x.zero? && movement.y.zero?
 
-      next_move = [leader.x, leader.y]
-      velocities = if movement.x.zero?
-        [0, movement.y]
-      elsif movement.y.zero?
-        [movement.x, 0]
-      else
-        horizontal_component = Math.cos(45 * DEGREES_TO_RADIANS) * movement.x
-        vertical_component = Math.sin(45 * DEGREES_TO_RADIANS) * movement.y
-        [horizontal_component, vertical_component]
-      end
-      next_move.x = (next_move.x + (velocities.x * PLAYER_SPEED)).clamp(0, world.dimensions.w - leader.w)
-      next_move.y = (next_move.y + (velocities.y * PLAYER_SPEED)).clamp(0, world.dimensions.h - leader.h)
+      next_move = [leader.x + movement.x, leader.y + movement.y]
+      next_move.x = (next_move.x).clamp(0, world.dimensions.w - leader.w)
+      next_move.y = (next_move.y).clamp(0, world.dimensions.h - leader.h)
       leader.queued_moves = [next_move]
-    end
-
-    def self.update_other_player_moves
-      other_players.each_with_index do |player, index|
-        following_player = ::Processor::Players.this.active_players[index - 1]
-        angle = args.geometry.angle_to(player, following_player)
-        horizontal_component = Math.cos(angle * DEGREES_TO_RADIANS)
-        vertical_component = Math.sin(angle * DEGREES_TO_RADIANS)
-        next_move = [player.x, player.y]
-        next_move.x = (next_move.x + (horizontal_component * PLAYER_SPEED)).clamp(0, world.dimensions.w - player.w)
-        next_move.y = (next_move.y + (vertical_component * PLAYER_SPEED)).clamp(0, world.dimensions.h - player.h)
-        player.queued_moves = [next_move]
-      end
     end
 
     def self.active_player_count
@@ -194,6 +179,10 @@ module Processor
 
     def self.world
       state.game.world
+    end
+
+    def self.camera
+      state.game.camera
     end
 
     ROSTER_NAMES = %w[
